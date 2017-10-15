@@ -37,7 +37,7 @@ centos
 
 ### App Tier Run Instructions
 ```
-# docker run -p 8000:80 cat-a-gram -e API_KEY=AbCdEfG
+# docker run -e "API_URL=http://thecatapi.com/api/images/get?format=xml&api_key=AbCdEfG" -p 8000:80 cat-a-gram
 ```
 
 ### DB Tier Run Instructions (temporary)

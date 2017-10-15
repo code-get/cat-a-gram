@@ -32,6 +32,10 @@ WORKDIR /app
 
 # Copy Src Files
 COPY app.py /app/app.py
+COPY model/__init__.py /app/model/__init__.py
+COPY model/cats.py /app/model/cats.py
+COPY service/__init__.py /app/service/__init__.py
+COPY service/api.py /app/service/api.py
 COPY requirements.txt /app/requirements.txt
 
 # Install the Application Requirements
