@@ -1,11 +1,12 @@
+from os import getenv
 from urllib.request import urlopen
 from xml.dom.minidom import parseString
 
 class APIService:
 	dom = ""
 
-	def __init__(self, apiurl):
-		with urlopen(apiurl) as apihandle:
+	def __init__(self):
+		with urlopen(getenv("API_URL")) as apihandle:
 			 self.dom = parseString(apihandle.read())
 
 	def getElementById(self, id):

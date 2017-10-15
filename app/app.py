@@ -7,10 +7,8 @@ app = Flask(__name__)
 
 @app.route("/cat")
 def get_cat():
-	apisvc = APIService(getenv("API_URL"))
-	
+	apisvc = APIService()
 	cats = CatCollection()
-
 	cats.insert(apisvc.getElementById("id"),
 		apisvc.getElementById("url"),
 		apisvc.getElementById("source_url"))
