@@ -14,14 +14,33 @@ Flask
 python3.6
 centos
 
+DB Tier:
+
+PostgreSQL
+centos
+
 ## Build Instructions
 
+### App Tier Build Instruction
+
 ```
-# docker build -t cat-a-gram .
+# docker build -t cat-a-gram app/.
 ``` 
+
+### DB Tier Build instruction
+
+```
+# docker build -t cat-a-gram-model db/.
+```
 
 ## Run Instructions
 
+### App Tier Run Instructions
 ```
 # docker run -p 8000:80 cat-a-gram -e API_KEY=AbCdEfG
+```
+
+### DB Tier Run Instructions (temporary)
+```
+# docker run -it -d -e PGSQL_DB_NAME=cg_history -e PGSQL_DB_USERNAME=cat -e PGSQL_DB_USER_PASSWORD=p@ssw0rd -p 5433:5432 cat-a-gram-model
 ```

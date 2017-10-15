@@ -27,8 +27,6 @@ RUN ./configure
 RUN make altinstall
 WORKDIR /usr/local
 
-
-
 # Set the app working dir
 WORKDIR /app
 
