@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+   db:
+      image: cat-a-gram-model:latest
+      ports:
+        - "5432:5432"
+      volumes:
+        - db_data:/var/lib/pgsql/data
+      restart: always
+      stdin_open: true
+      tty: true
+      environment:
+        PGSQL_DB_NAME: <DATABASENAME>
+        PGSQL_DB_USERNAME: <DATABASEUSER>
+        PGSQL_DB_USER_PASSWORD: <DATABASEPASSWORD>
+
+   web:
+      depends_on:
+        - db
+      image: cat-a-gram:latest
+      ports:
+        - "80:80"
+      restart: always
+      environment:
+        API_URL: http://thecatapi.com/api/images/get?format=xml&api_key=<APIKEY>
+        DB_NAME: <DATABASENAME>
+        DB_HOST: db
+        DB_USER: <DATABASEUSER>
+        DB_PASSWORD: <DATABASEPASSWORD>
+volumes:
+   db_data:

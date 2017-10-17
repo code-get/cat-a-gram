@@ -1,0 +1,11 @@
+# Makefile.in
+#
+
+cat-a-gram:
+	docker build -t cat-a-gram app/.
+
+cat-a-gram-model:
+	docker build -t cat-a-gram-model db/.
+
+clean:
+	rm -f Makefile

@@ -34,4 +34,4 @@ WORKDIR /var/lib/pgsql
 # Open PostgreSQL Port
 EXPOSE 5432
 
-CMD ["/bin/bash"]
+ENTRYPOINT ["/bin/bash"]

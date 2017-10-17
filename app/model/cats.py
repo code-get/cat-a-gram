@@ -30,8 +30,10 @@ class CatCollection:
 
 	def __init__(self):
 		self.cats = []
+		self.dbhost = getenv("DB_HOST")
 		self.dbname = getenv("DB_NAME")
 		self.dbuser = getenv("DB_USER")
+		self.dbpass = getenv("DB_PASSWORD")
 
 	def insert(self, id, url, sourceUrl):
 		cat = CatImage(id, url, sourceUrl)
@@ -41,16 +43,16 @@ class CatCollection:
 
 		#save to database
 		try:
-			dbconn = connect("dbname=" + self.dbname + " user=" + self.dbuser)
+			dbconn = connect("host=" + self.dbhost + " dbname=" + self.dbname + " user=" + self.dbuser + " password=" + self.dbpass)
 			cur = dbconn.cursor()
 		
 			# I would never do this in real life do database update
 			# this is could be a potential vulnerability
 			# I would setup a broker table with a trigger to do the update or insert
-			cur.execute("INSERT INTO " + self.dbname + " (id, url, sourceurl) VALUES ('"+ id + "', '" + url + "', '" + sourceUrl + "')")
+			cur.execute("INSERT INTO image (id, url, source_url) VALUES ('"+ id + "', '" + url + "', '" + sourceUrl + "')")
 			dbconn.commit() 
 			cur.close()			
-			conn.close()
+			dbconn.close()
 		except OperationalError as err:
 			raise err
 
