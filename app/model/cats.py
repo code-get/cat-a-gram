@@ -1,5 +1,6 @@
 from os import getenv
 from psycopg2 import connect, OperationalError
+from json import dumps
 
 class CatImage:
 	url = ""
@@ -21,12 +22,11 @@ class CatImage:
 		return self.sourceUrl
 
 	def __str__(self):
-		return self.id + ":" + self.url + ":" + self.sourceUrl + "\n"
+		return dumps({'image': {'url': "'" + self.url + "'", 'id': "'" + self.id + "'", 'source_url': "'" + self.sourceUrl + "'" }})
 
 class CatCollection:
 	cats = ""
-	dbname = ""
-	dbuser = ""
+	lastcat = ""
 
 	def __init__(self):
 		self.cats = []
@@ -40,21 +40,22 @@ class CatCollection:
 		
 		#save to collection
 		self.cats += [cat]
+		self.lastcat = cat
 
 		#save to database
 		try:
 			dbconn = connect("host=" + self.dbhost + " dbname=" + self.dbname + " user=" + self.dbuser + " password=" + self.dbpass)
 			cur = dbconn.cursor()
-		
-			# I would never do this in real life do database update
-			# this is could be a potential vulnerability
-			# I would setup a broker table with a trigger to do the update or insert
+			#NOTE: this direct insert is just for simplicity I would normally setup a broker table with a trigger to do the update or insert
 			cur.execute("INSERT INTO image (id, url, source_url) VALUES ('"+ id + "', '" + url + "', '" + sourceUrl + "')")
 			dbconn.commit() 
 			cur.close()			
 			dbconn.close()
 		except OperationalError as err:
 			raise err
+
+	def latest(self):
+		return str(self.lastcat)	
 
 	def __str__(self):
 		outstr = ""

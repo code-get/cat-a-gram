@@ -4,7 +4,7 @@ services:
    db:
       image: cat-a-gram-model:latest
       ports:
-        - "5432:5432"
+        - "<DATABASEPORT>:5432"
       volumes:
         - db_data:/var/lib/pgsql/data
       restart: always
@@ -20,7 +20,7 @@ services:
         - db
       image: cat-a-gram:latest
       ports:
-        - "80:80"
+        - "<WEBPORT>:80"
       restart: always
       environment:
         API_URL: http://thecatapi.com/api/images/get?format=xml&api_key=<APIKEY>

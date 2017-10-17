@@ -1,5 +1,5 @@
 from os import getenv
-from flask import Flask
+from flask import Flask, Response, request
 from model.cats import CatCollection
 from service.api import APIService
  
@@ -13,7 +13,9 @@ def get_cat():
 		apisvc.getElementById("url"),
 		apisvc.getElementById("source_url"))
 
-	return str(cats) 
+	response = Response(cats.latest(), status=200, mimetype='application/json')
+	#response.headers['Link'] = "'" + request.host + "'" 
+	return response
 
 if __name__ == "__main__":
 	app.run(host='0.0.0.0', port=80)

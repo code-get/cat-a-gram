@@ -6,21 +6,29 @@ echo "cat-a-gram configuration"
 read -p "Enter a Database Name: " mydb
 DB_NAME="$mydb"
 
+read -p "Enter the Database Port: " myport
+DB_PORT="$myport"
+
 read -p "Enter a Database Username: " mydbuser
 DB_USERNAME="$mydbuser"
 
-echo -n "Enter the Database user's password: "
+echo "Enter the Database user's password: "
 stty -echo
 read mypasswd
 stty echo
 DB_PASSWORD="$mypasswd"
 
 echo ""
-read -p "Enter your API KEY: " myapikey
+read -p "Enter your theCatAPI KEY: " myapikey
 API_KEY="$myapikey"
 currentdir=`pwd`
 version=`cat $currentdir/resources/version`
 composerfile="$currentdir/resources/docker-compose.yml"
+
+read -p "Enter the Website Port: " mywebport
+WEBPORT="$mywebport"
+
+
 
 echo "Generating makefile for cat-a-gram $version ..."
 echo "VERSION = $version" >Makefile
@@ -29,8 +37,10 @@ cat Makefile.in >>Makefile
 echo "Building Docker Compose file"
 cp $composerfile .
 sed -i -e "s/<DATABASENAME>/$DB_NAME/g" docker-compose.yml
+sed -i -e "s/<DATABASEPORT>/$DB_PORT/g" docker-compose.yml
 sed -i -e "s/<DATABASEUSER>/$DB_USERNAME/g" docker-compose.yml
 sed -i -e "s/<DATABASEPASSWORD>/$DB_PASSWORD/g" docker-compose.yml 
 sed -i -e "s/<APIKEY>/$API_KEY/g" docker-compose.yml
+sed -i -e "s/<WEBPORT>/$WEBPORT/g" docker-compose.yml
 
 echo "Next to do the image builds type make"
