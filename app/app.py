@@ -1,5 +1,5 @@
 from os import getenv
-from flask import Flask, Response, request
+from flask import Flask, Response
 from model.cats import CatCollection
 from service.api import APIService
  
@@ -9,12 +9,14 @@ app = Flask(__name__)
 def get_cat():
 	apisvc = APIService()
 	cats = CatCollection()
-	cats.insert(apisvc.getElementById("id"),
-		apisvc.getElementById("url"),
-		apisvc.getElementById("source_url"))
+	return Response(cats.insert(apisvc.getElementById("id"),
+			    		apisvc.getElementById("url"),
+		            		apisvc.getElementById("source_url")), status=200, mimetype='application/json')
 
-	response = Response(cats.latest(), status=200, mimetype='application/json')
-	#response.headers['Link'] = "'" + request.host + "'" 
+@app.route("/history")
+def get_history():
+	cats = CatCollection()
+	response = Response(cats.history(), status=200, mimetype='application/json')
 	return response
 
 if __name__ == "__main__":

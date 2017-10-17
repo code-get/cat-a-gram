@@ -2,49 +2,11 @@ from os import getenv
 from psycopg2 import connect, OperationalError
 from json import dumps
 
-class CatImage:
-	url = ""
-	id = ""
-	sourceUrl = ""
-
-	def __init__(self, id, url, sourceUrl):
-		self.id = id
-		self.url = url
-		self.sourceUrl = sourceUrl
-
-	def getUrl(self):
-		return self.url
-
-	def getId(self):
-		return self.id
-
-	def getSourceUrl(self):
-		return self.sourceUrl
-
-	def __str__(self):
-		return dumps({'image': {'url': "'" + self.url + "'", 'id': "'" + self.id + "'", 'source_url': "'" + self.sourceUrl + "'" }})
-
 class CatCollection:
-	cats = ""
-	lastcat = ""
-
-	def __init__(self):
-		self.cats = []
-		self.dbhost = getenv("DB_HOST")
-		self.dbname = getenv("DB_NAME")
-		self.dbuser = getenv("DB_USER")
-		self.dbpass = getenv("DB_PASSWORD")
-
 	def insert(self, id, url, sourceUrl):
-		cat = CatImage(id, url, sourceUrl)
-		
-		#save to collection
-		self.cats += [cat]
-		self.lastcat = cat
-
 		#save to database
 		try:
-			dbconn = connect("host=" + self.dbhost + " dbname=" + self.dbname + " user=" + self.dbuser + " password=" + self.dbpass)
+			dbconn = connect("host=" + getenv("DB_HOST") + " dbname=" + getenv("DB_NAME") + " user=" + getenv("DB_USER") + " password=" + getenv("DB_PASSWORD"))
 			cur = dbconn.cursor()
 			#NOTE: this direct insert is just for simplicity I would normally setup a broker table with a trigger to do the update or insert
 			cur.execute("INSERT INTO image (id, url, source_url) VALUES ('"+ id + "', '" + url + "', '" + sourceUrl + "')")
@@ -54,11 +16,26 @@ class CatCollection:
 		except OperationalError as err:
 			raise err
 
-	def latest(self):
-		return str(self.lastcat)	
+		return dumps({'image': {'url': "'" + url + "'", 'id': "'" + id + "'", 'source_url': "'" + sourceUrl + "'" }})
 
-	def __str__(self):
-		outstr = ""
-		for cat in self.cats:
-			outstr += str(cat)
-		return outstr	
+	def history(self):
+		outstr = {}
+		outstr['images'] = []
+		try:
+			dbconn = connect("host=" + getenv("DB_HOST") + " dbname=" + getenv("DB_NAME") + " user=" + getenv("DB_USER") + " password=" + getenv("DB_PASSWORD"))
+			cur = dbconn.cursor()
+			cur.execute("SELECT id, url, source_url FROM image;")
+			records = cur.fetchall()
+			recordCount = 0
+			for record in records:
+				catimage = {}
+				catimage['url'] = record[1]
+				catimage['id'] = record[0]
+				catimage['source_url'] = record[2]
+				outstr['images'] += [catimage]
+			cur.close()
+			dbconn.close()
+		except OperationalError as err:
+			raise err
+
+		return dumps(outstr)	
