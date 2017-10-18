@@ -43,4 +43,6 @@ sed -i -e "s/<DATABASEPASSWORD>/$DB_PASSWORD/g" docker-compose.yml
 sed -i -e "s/<APIKEY>/$API_KEY/g" docker-compose.yml
 sed -i -e "s/<WEBPORT>/$WEBPORT/g" docker-compose.yml
 
-echo "Next to do the image builds type make"
+echo "Next to do the image builds type:"
+echo "sudo make cat-a-gram-model"
+echo "sudo make cat-a-gram"
